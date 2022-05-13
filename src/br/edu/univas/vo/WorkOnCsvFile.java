@@ -6,32 +6,37 @@ import java.util.*;
 
 public class WorkOnCsvFile {
 
-    public static void readCsv(){
+    public void readCsv(File CSV_FILE){
 
-        File CSV_FILE = new File("C:\\CSV\\Subjects.csv");
-        Scanner scanner = null;
+        Scanner readFile = null;
         try{
-            scanner = new Scanner(CSV_FILE);
-            while(scanner.hasNextLine()){
-                String line = scanner.nextLine();
+            readFile = new Scanner(CSV_FILE);
+            while(readFile.hasNextLine()){
+                String line = readFile.nextLine();
                 String[] splitStrings = line.split(",");
-                for (int i = 0; i < 5;  i++){
-                    System.out.println(splitStrings[i]);
+                for (int i = 0, j = 1; i < splitStrings.length; i++, j++){
+                    System.out.println(j +". " + splitStrings[i]);
                 }
             }
+            System.out.println("\n9. Exit");
         }catch(IOException e){
             System.out.println("File not found!!!");
         }
     }
 
-    public static String chooseOption(int option){
+    public static String returnSubject(File CSV_FILE, int option){
 
-        if(option == 1){
-            return "History";
-        }else if(option == 2){
-            return "Portuguese";
-        }else if(option == 3){
-            return "English";
+        Scanner readFile = null;
+        try{
+            readFile = new Scanner(CSV_FILE);
+            while(readFile.hasNextLine()){
+                String line = readFile.nextLine();
+                String[] splitStrings = line.split(",");
+
+                return splitStrings[option];
+            }
+        }catch(IOException e){
+            System.out.println("File not found!!!");
         }
         return null;
     }
@@ -58,15 +63,18 @@ public class WorkOnCsvFile {
         return names;
     }
 
-    public static void saveRollCall(String subject, List<String> names){
+    public static void saveRollCall(String subject, List<String> names, File CSV_FILE){
 
         Date date = new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("_dd_MM_yyyy");
         String formatDate = simpleDate.format(date);
-        String fileName = subject.toLowerCase() + formatDate + ".csv";
+        String fileName = subject.toLowerCase() + formatDate + ".txt";
+        String fileCsvName = CSV_FILE.getName();
+        String path = CSV_FILE.getPath();
+        path = path.replaceAll(fileCsvName, "");
 
-        try(BufferedWriter saveRollCall = new BufferedWriter(
-                new FileWriter("C:\\CSV\\"+ fileName))){
+
+        try(BufferedWriter saveRollCall = new BufferedWriter(new FileWriter(path + fileName))){
 
             for(int i=0; i<names.size(); i++){
                 saveRollCall.write(names.get(i));
@@ -80,3 +88,4 @@ public class WorkOnCsvFile {
     }
 
 }
+

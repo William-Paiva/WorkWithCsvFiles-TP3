@@ -32,8 +32,7 @@ public class WorkOnCsvFile {
             while(readFile.hasNextLine()){
                 String line = readFile.nextLine();
                 String[] splitStrings = line.split(",");
-
-                return splitStrings[option];
+                return splitStrings[option - 1];
             }
         }catch(IOException e){
             System.out.println("File not found!!!");
@@ -59,7 +58,6 @@ public class WorkOnCsvFile {
                 option++;
             }
         }while(option == 1);
-
         return names;
     }
 
@@ -67,15 +65,13 @@ public class WorkOnCsvFile {
 
         Date date = new Date();
         SimpleDateFormat simpleDate = new SimpleDateFormat("_dd_MM_yyyy");
-        String formatDate = simpleDate.format(date);
-        String fileName = subject.toLowerCase() + formatDate + ".txt";
         String fileCsvName = CSV_FILE.getName();
         String path = CSV_FILE.getPath();
         path = path.replaceAll(fileCsvName, "");
+        String formatDate = simpleDate.format(date);
+        String fileName = path + subject.toLowerCase() + formatDate + ".txt";
 
-
-        try(BufferedWriter saveRollCall = new BufferedWriter(new FileWriter(path + fileName))){
-
+        try(BufferedWriter saveRollCall = new BufferedWriter(new FileWriter(fileName))){
             for(int i=0; i<names.size(); i++){
                 saveRollCall.write(names.get(i));
                 saveRollCall.newLine();
